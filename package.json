@@ -1,6 +1,7 @@
 {
   "name": "loppy",
   "private": true,
+  "license": "MIT",
   "version": "0.5.0",
   "type": "module",
   "scripts": {

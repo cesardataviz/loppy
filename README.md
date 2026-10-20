@@ -14,6 +14,7 @@ Retos cortos de **Python**, **SQL Server** y **Power BI**, con rachas, XP y nive
 ![Versión](https://img.shields.io/badge/versión-0.5.0-8B5CF6)
 ![Retos](https://img.shields.io/badge/retos-197-FACC15)
 ![PWA](https://img.shields.io/badge/PWA-instalable-0F172A)
+[![Licencia MIT](https://img.shields.io/badge/licencia-MIT-22C55E)](LICENSE)
 
 ![React](https://img.shields.io/badge/React_19-20232A?logo=react&logoColor=61DAFB)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
@@ -281,6 +282,10 @@ timeline
 - [ ] App para iOS y Android con Capacitor
 
 Para más detalle, revisa [docs/ARQUITECTURA.md](docs/ARQUITECTURA.md).
+
+## 📄 Licencia
+
+Loppy es software libre bajo la [licencia MIT](LICENSE): puedes usarlo, copiarlo, modificarlo y compartirlo, siempre que mantengas el aviso de copyright.
 
 ---
 
