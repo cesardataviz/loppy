@@ -213,8 +213,8 @@ sequenceDiagram
 > Necesitas [Node.js](https://nodejs.org) 24 o más nuevo.
 
 ```bash
-git clone <url-de-este-repo>
-cd Loppy
+git clone https://github.com/cesardataviz/loppy.git
+cd loppy
 npm install
 npm run dev
 ```
