@@ -1,0 +1,138 @@
+:root {
+  /* Paleta oficial de Loppy */
+  --blue: #3B82F6;          /* Principal: botones, cuerpo de Loppy */
+  --blue-deep: #1D4ED8;
+  --yellow: #FACC15;        /* Energía: rachas, logros, recompensas */
+  --yellow-deep: #CA8A04;
+  --violet: #8B5CF6;        /* Secundario: subtítulos, tags, progreso */
+  --snow: #F8FAFC;          /* Fondo claro */
+  --night: #0F172A;         /* Editor y consola */
+  --night-2: #1E293B;
+
+  --ink: #0F172A;
+  --ink-2: #475569;
+  --ink-3: #94A3B8;
+  --line: #E2E8F0;
+  --card: #FFFFFF;
+  --ok: #16A34A;
+  --retry: #F97316;
+
+  --radius: 18px;
+  --radius-sm: 12px;
+  --shadow: 0 1px 2px rgb(15 23 42 / .06), 0 6px 20px rgb(15 23 42 / .06);
+  --font: 'Nunito', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+  --nav-h: 64px;
+}
+
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  background: var(--snow);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+button:disabled { cursor: not-allowed; }
+:focus-visible { outline: 3px solid var(--violet); outline-offset: 2px; }
+code, pre { font-family: var(--mono); }
+
+/* ---------- Botones ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 48px; padding: 0 22px;
+  border-radius: 14px;
+  font-weight: 800; font-size: 16px; letter-spacing: .01em;
+  transition: transform .08s, box-shadow .08s, background .15s;
+}
+.btn:active:not(:disabled) { transform: translateY(3px); box-shadow: none !important; }
+.btn--primary { background: var(--blue); color: #fff; box-shadow: 0 4px 0 var(--blue-deep); }
+.btn--primary:hover:not(:disabled) { background: #4F8EF7; }
+.btn--energy { background: var(--yellow); color: var(--ink); box-shadow: 0 4px 0 var(--yellow-deep); }
+.btn--ghost { background: var(--card); color: var(--ink); box-shadow: 0 3px 0 var(--line); border: 2px solid var(--line); }
+.btn--ghost:hover:not(:disabled) { border-color: #CBD5E1; }
+.btn--block { width: 100%; }
+.btn:disabled { opacity: .55; }
+.btn--sm { min-height: 38px; padding: 0 14px; font-size: 14px; border-radius: 11px; }
+
+/* ---------- Tarjetas y chips ---------- */
+.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: 999px;
+  font-weight: 800; font-size: 14px;
+  background: var(--card); border: 2px solid var(--line);
+}
+.chip--streak { color: var(--yellow-deep); }
+.chip--streak.is-active { background: #FEF9C3; border-color: var(--yellow); }
+.chip--xp { color: var(--violet); }
+.tag {
+  display: inline-block; padding: 3px 10px; border-radius: 999px;
+  font-size: 12px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase;
+  background: #EDE9FE; color: #6D28D9;
+}
+.eyebrow { color: var(--violet); font-weight: 800; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; margin: 0 0 4px; }
+.muted { color: var(--ink-2); }
+
+.bar { height: 12px; background: #E2E8F0; border-radius: 999px; overflow: hidden; }
+.bar > span { display: block; height: 100%; background: var(--violet); border-radius: inherit; transition: width .5s cubic-bezier(.3,.7,.4,1); }
+.bar--energy > span { background: var(--yellow); }
+
+/* ---------- Layout general ---------- */
+.app { min-height: 100%; display: flex; flex-direction: column; }
+.page { width: 100%; max-width: 760px; margin: 0 auto; padding: 16px 16px calc(var(--nav-h) + 32px); }
+
+.topbar {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 16px;
+  background: rgb(248 250 252 / .9); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.brand { display: flex; align-items: center; gap: 8px; font-weight: 900; font-size: 22px; letter-spacing: -.02em; margin-right: auto; }
+.brand img { width: 32px; height: 32px; }
+
+.nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 30;
+  height: calc(var(--nav-h) + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  display: flex; justify-content: center;
+  background: var(--card); border-top: 1px solid var(--line);
+}
+.nav__item {
+  flex: 1; max-width: 160px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  font-size: 12px; font-weight: 800; color: var(--ink-3);
+}
+.nav__item svg { width: 26px; height: 26px; }
+.nav__item.is-active { color: var(--blue); }
+
+/* ---------- Texto enriquecido de conceptos ---------- */
+.rich p { margin: 0 0 10px; line-height: 1.55; }
+.rich p:last-child { margin-bottom: 0; }
+.rich code { background: #EEF2FF; color: #4338CA; padding: 1px 6px; border-radius: 6px; font-size: .9em; }
+.rich pre { background: var(--night); color: #E2E8F0; padding: 12px 14px; border-radius: var(--radius-sm); overflow-x: auto; font-size: 14px; line-height: 1.5; margin: 0 0 10px; }
+
+@media (min-width: 900px) {
+  .nav { top: 0; bottom: auto; left: auto; right: 0; height: 57px; border: 0; background: transparent; padding: 0 16px; gap: 4px; }
+  .nav__item { flex-direction: row; gap: 6px; font-size: 15px; padding: 0 14px; max-width: none; flex: none; }
+  .nav__item svg { width: 22px; height: 22px; }
+  .topbar { padding-right: 420px; }
+  .page { padding-bottom: 48px; }
+}
+
+/* ---------- Aviso de versión nueva ---------- */
+.update {
+  position: fixed; z-index: 35; left: 16px; right: 16px;
+  bottom: calc(var(--nav-h) + env(safe-area-inset-bottom) + 12px);
+  max-width: 520px; margin: 0 auto;
+  display: flex; align-items: center; gap: 12px; justify-content: space-between;
+  padding: 10px 10px 10px 16px;
+  background: var(--night); color: #fff; font-weight: 800;
+  border-radius: var(--radius); box-shadow: var(--shadow);
+}
+@media (min-width: 900px) { .update { bottom: 24px; } }

@@ -1,0 +1,85 @@
+.loppy {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.loppy__svg { width: 100%; height: 100%; overflow: visible; position: relative; z-index: 1; }
+
+.loppy__loop {
+  fill: none;
+  stroke: var(--blue);
+  stroke-width: 22;
+  stroke-linejoin: round;
+}
+.loppy__leg { stroke: var(--blue-deep); stroke-width: 9; stroke-linecap: round; fill: none; transition: d .25s; }
+.loppy__mouth { fill: #0F172A; stroke: #0F172A; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+.loppy--idle .loppy__mouth, .loppy--thinking .loppy__mouth, .loppy--error .loppy__mouth { fill: none; }
+.loppy__swirl { fill: none; stroke: var(--night); stroke-width: 4; stroke-linecap: round; }
+.loppy__body { transform-origin: 100px 80px; transform-box: view-box; }
+.loppy__eye { transform-origin: center; transform-box: fill-box; }
+
+/* Bandana según racha */
+.loppy__bandana path { fill: var(--violet); }
+.loppy--tier-gold .loppy__bandana path,
+.loppy--tier-glow .loppy__bandana path { fill: var(--yellow); }
+.loppy--tier-rainbow .loppy__bandana path { fill: #F472B6; }
+
+.loppy__aura {
+  position: absolute; inset: -6% 4%;
+  border-radius: 50%;
+  filter: blur(18px);
+  opacity: .45;
+  background: var(--violet);
+  animation: aura 3s ease-in-out infinite;
+}
+.loppy--tier-gold .loppy__aura { background: var(--yellow); opacity: .35; }
+.loppy--tier-glow .loppy__aura { background: var(--yellow); opacity: .65; }
+.loppy--tier-rainbow .loppy__aura {
+  background: conic-gradient(#FACC15, #F472B6, #8B5CF6, #3B82F6, #34D399, #FACC15);
+  opacity: .7;
+  animation: aura 3s ease-in-out infinite, spin 6s linear infinite;
+}
+
+/* Esperando: pestañea y gira suave */
+.loppy--idle .loppy__body { animation: sway 4s ease-in-out infinite; }
+.loppy--idle .loppy__eye { animation: blink 4.5s infinite; }
+
+/* Ejecutando: gira como un icono de carga */
+.loppy--thinking .loppy__body { animation: spin 1.1s cubic-bezier(.6,.1,.4,.9) infinite; }
+
+/* Acierto: salto mortal hacia atrás */
+.loppy--success .loppy__body { animation: backflip .9s cubic-bezier(.3,.7,.4,1) both; }
+.loppy__sparks circle { animation: spark .9s ease-out both; opacity: 0; }
+
+/* Error: se enreda con cara de confusión */
+.loppy--error .loppy__body { animation: tangle .7s ease-in-out both, sway 3s ease-in-out .7s infinite; }
+.loppy--error .loppy__swirl { animation: spin-swirl 1.6s linear infinite; transform-box: fill-box; transform-origin: center; }
+
+@keyframes sway { 0%,100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+@keyframes blink { 0%,92%,100% { transform: scaleY(1); } 95% { transform: scaleY(.1); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes backflip {
+  0% { transform: translateY(0) rotate(0); }
+  35% { transform: translateY(-34px) rotate(-180deg); }
+  70% { transform: translateY(-10px) rotate(-360deg); }
+  85% { transform: translateY(0) scale(1.08, .92) rotate(-360deg); }
+  100% { transform: translateY(0) rotate(-360deg); }
+}
+@keyframes spark {
+  0% { opacity: 1; transform: translate(0, 0) scale(.4); }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1.2); }
+}
+@keyframes tangle {
+  0% { transform: scale(1); }
+  25% { transform: scale(1.1, .85) rotate(-8deg); }
+  50% { transform: scale(.9, 1.1) rotate(8deg); }
+  75% { transform: scale(1.05, .95) rotate(-4deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+@keyframes spin-swirl { to { transform: rotate(-360deg); } }
+@keyframes aura { 0%,100% { transform: scale(.92); } 50% { transform: scale(1.06); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .loppy *, .loppy__aura { animation: none !important; }
+}

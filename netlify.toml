@@ -1,0 +1,36 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "24"
+
+# El service worker siempre se revisa en la red, para detectar versiones nuevas.
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/manifest.webmanifest"
+  [headers.values]
+    Content-Type = "application/manifest+json"
+    Cache-Control = "no-cache"
+
+# Archivos con hash o con versión en la ruta: nunca cambian.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/pyodide/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Cualquier ruta abre Loppy (en vez de la página 404 de Netlify).
+# Los archivos que existen (JS, iconos, Python…) se siguen sirviendo normalmente.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

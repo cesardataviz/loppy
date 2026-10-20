@@ -1,0 +1,80 @@
+rules_version = '2';
+
+// Reglas de seguridad de Loppy.
+// - Cada persona solo puede leer y escribir SU documento (users/{suId}) y sus intentos.
+// - Nadie puede listar a los demás usuarios desde la app (eso solo se ve en la consola de Firebase).
+// - Se validan los datos: campos permitidos, tipos y límites razonables.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isOwner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    function isCount(v, max) {
+      return v is int && v >= 0 && v <= max;
+    }
+
+    function isDayOrNull(v) {
+      return v == null || (v is string && v.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$'));
+    }
+
+    function validProgress(d) {
+      return d.keys().hasOnly([
+          'name', 'email', 'createdAt', 'lastSeenAt', 'epoch',
+          'xp', 'level', 'solved', 'streak', 'bestStreak', 'lastActive',
+          'todayDate', 'todayXp', 'dailyGoal', 'completed', 'attempts', 'history'
+        ])
+        && d.name is string && d.name.size() > 0 && d.name.size() <= 40
+        && d.email == request.auth.token.email
+        && d.lastSeenAt == request.time
+        && isCount(d.epoch, 1000000)
+        && isCount(d.xp, 100000)
+        && d.level is string && d.level.size() <= 40
+        && isCount(d.solved, 5000)
+        && isCount(d.streak, 100000)
+        && isCount(d.bestStreak, 100000)
+        && isDayOrNull(d.lastActive)
+        && isDayOrNull(d.todayDate)
+        && isCount(d.todayXp, 100000)
+        && isCount(d.dailyGoal, 1000)
+        && d.completed is map && d.completed.size() <= 5000
+        && d.attempts is map && d.attempts.size() <= 5000
+        && d.history is map && d.history.size() <= 20000;
+    }
+
+    match /users/{uid} {
+      allow get: if isOwner(uid);
+      allow list: if false;
+
+      allow create: if isOwner(uid)
+        && validProgress(request.resource.data)
+        && request.resource.data.createdAt == request.time;
+
+      // epoch nunca baja: un dispositivo desactualizado no puede pisar un reinicio.
+      allow update: if isOwner(uid)
+        && validProgress(request.resource.data)
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.epoch >= resource.data.epoch;
+
+      allow delete: if isOwner(uid);
+
+      match /attempts/{attemptId} {
+        allow read, delete: if isOwner(uid);
+        // create o reenvío idéntico (si se cortó el internet a mitad del envío).
+        allow create, update: if isOwner(uid)
+          && request.resource.data.keys().hasOnly(['exerciseId', 'passed', 'day', 'at'])
+          && request.resource.data.exerciseId is string && request.resource.data.exerciseId.size() <= 80
+          && request.resource.data.passed is bool
+          && isDayOrNull(request.resource.data.day) && request.resource.data.day != null
+          && request.resource.data.at is timestamp
+          && request.resource.data.at <= request.time + duration.value(5, 'm');
+      }
+    }
+
+    // Todo lo demás está cerrado.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
