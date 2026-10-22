@@ -3,6 +3,7 @@ import { progress, type Progress } from '../progress/store'
 import { levelFor } from '../progress/levels'
 import { loadFirebase } from './firebase'
 import { setCloud, type Account } from './state'
+import { startRanking, stopRanking } from './ranking'
 
 // Sincroniza el progreso de este dispositivo con users/{uid} en Firestore.
 //
@@ -215,6 +216,7 @@ export async function startSync(account: Account, isNew = false) {
     if (session === s) setStatusFromError(e)
   }
   if (session !== s) return
+  void startRanking(account, db, fs)
 
   // Cambios que llegan de otros dispositivos, en vivo.
   const unsubSnap = fs.onSnapshot(
@@ -284,12 +286,13 @@ export async function flushSync(maxMs = 5000) {
 }
 
 export function stopSync() {
+  stopRanking()
   session?.stop()
   session = null
   setCloud({ sync: 'idle' })
 }
 
-/** Borra todo lo de la persona en la nube (documento + intentos). Lo usa "Borrar mi cuenta". */
+/** Borra todo lo de la persona en la nube (documento, intentos y ranking). Lo usa "Borrar mi cuenta". */
 export async function deleteCloudData(uid: string) {
   const { db, fsMod: fs } = await loadFirebase()
   const ref = fs.doc(db, 'users', uid)
@@ -301,7 +304,11 @@ export async function deleteCloudData(uid: string) {
     page.docs.forEach((d) => batch.delete(d.ref))
     await batch.commit()
   }
-  await fs.deleteDoc(ref)
+  // Juntos: las reglas solo dejan borrar el ranking si también se borra la cuenta.
+  const batch = fs.writeBatch(db)
+  batch.delete(fs.doc(db, 'ranking', uid))
+  batch.delete(ref)
+  await batch.commit()
   try {
     localStorage.removeItem(epochKey(uid))
     localStorage.removeItem(queueKey(uid))

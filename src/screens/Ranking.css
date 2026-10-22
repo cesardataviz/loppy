@@ -1,0 +1,66 @@
+.rank { display: grid; gap: 16px; }
+
+.rank__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.rank__head h1 { margin: 0; font-size: 28px; font-weight: 900; letter-spacing: -.01em; }
+.rank__tabs { display: flex; gap: 4px; padding: 4px; background: #E2E8F0; border-radius: 14px; }
+.rank__tabs button { padding: 8px 18px; border-radius: 11px; font-weight: 800; color: var(--ink-2); }
+.rank__tabs button.is-active { background: var(--card); color: var(--blue); box-shadow: 0 1px 3px rgb(15 23 42 / .12); }
+
+/* ---------- Podio: 2 · 1 · 3 ---------- */
+.podium { display: grid; grid-template-columns: 1fr 1.15fr 1fr; gap: 10px; align-items: end; }
+.podium__spot {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 14px 8px 0; min-width: 0;
+  background: var(--card); border: 2px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow); overflow: hidden; text-align: center;
+}
+.podium__spot--1 { min-height: 210px; border-color: var(--yellow); background: linear-gradient(180deg, #FEF9C3, #FFFFFF 70%); }
+.podium__spot--2 { min-height: 180px; border-color: #CBD5E1; background: linear-gradient(180deg, #F1F5F9, #FFFFFF 70%); }
+.podium__spot--3 { min-height: 165px; border-color: #FDBA74; background: linear-gradient(180deg, #FFEDD5, #FFFFFF 70%); }
+.podium__spot.is-me { outline: 3px solid var(--violet); outline-offset: 2px; }
+.podium__medal { font-size: 34px; line-height: 1; }
+.podium__spot--1 .podium__medal { font-size: 44px; animation: rank-bob 2.4s ease-in-out infinite; }
+.podium__spot .flag { font-size: 20px; }
+.podium__name { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 900; padding: 0 4px; }
+.podium__name small, .rank__name small { color: var(--violet); font-weight: 800; }
+.podium__xp { font-weight: 800; font-size: 14px; color: var(--ink-2); }
+.podium__spot--1 .podium__xp { color: var(--yellow-deep); }
+.podium__base {
+  margin-top: auto; align-self: stretch; padding: 8px 0;
+  font-size: 22px; font-weight: 900; color: var(--ink-2); background: #F1F5F9;
+}
+.podium__spot--1 .podium__base { font-size: 28px; color: #713F12; background: var(--yellow); }
+.podium__spot--2 .podium__base { background: #E2E8F0; }
+.podium__spot--3 .podium__base { color: #7C2D12; background: #FED7AA; }
+@keyframes rank-bob { 50% { transform: translateY(-4px) rotate(-4deg); } }
+@media (prefers-reduced-motion: reduce) { .podium__spot--1 .podium__medal { animation: none; } }
+
+/* ---------- Lista desde el 4 ---------- */
+.rank__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.rank__row {
+  display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 16px;
+  background: var(--card); border: 2px solid var(--line); border-radius: var(--radius-sm);
+}
+.rank__row.is-me { border-color: var(--violet); background: #F5F3FF; }
+.rank__place { width: 28px; flex: none; text-align: center; font-weight: 900; color: var(--ink-3); }
+.rank__row .flag { font-size: 20px; flex: none; }
+.rank__name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 800; }
+.rank__xp { flex: none; font-weight: 900; color: var(--violet); }
+.rank__xp small { font-size: 11px; color: var(--ink-3); }
+
+.rank__me, .rank__cta, .rank__empty { display: grid; gap: 10px; justify-items: start; }
+.rank__me p, .rank__cta p, .rank__empty p { margin: 0; line-height: 1.5; }
+.rank__me { border-color: #C4B5FD; background: #F5F3FF; }
+.rank__cta { background: linear-gradient(135deg, #EFF6FF, #F5F3FF); border-color: #C7D2FE; }
+.rank__empty { justify-items: center; text-align: center; }
+.rank__big { font-size: 40px; }
+
+.is-skeleton { border-color: transparent !important; background: #E2E8F0 !important; box-shadow: none; animation: rank-pulse 1.2s ease-in-out infinite; }
+.rank__loading { display: grid; gap: 8px; }
+.rank__loading .podium { margin-bottom: 8px; }
+@keyframes rank-pulse { 50% { opacity: .5; } }
+
+@media (max-width: 380px) {
+  .podium { gap: 6px; }
+  .podium__name { font-size: 14px; }
+}

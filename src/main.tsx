@@ -11,7 +11,11 @@ import '@fontsource/nunito/latin-900.css'
 import '@fontsource/jetbrains-mono/latin-400.css'
 import '@fontsource/jetbrains-mono/latin-600.css'
 import './styles.css'
+// Banderas de países: Windows no las trae y muestra letras ("PE"). Solo ahí se carga esta fuente.
+import { polyfillCountryFlagEmojis } from 'country-flag-emoji-polyfill'
+import flagFont from 'country-flag-emoji-polyfill/dist/TwemojiCountryFlags.woff2?url'
 
+polyfillCountryFlagEmojis('Twemoji Country Flags', flagFont)
 registerServiceWorker()
 initCloud()
 

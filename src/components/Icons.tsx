@@ -37,3 +37,6 @@ export const Check = ({ size }: P) => (
 export const Eye = ({ size }: P) => (
   <svg {...base(size)}><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" /><circle cx="12" cy="12" r="3" /></svg>
 )
+export const Trophy = ({ size }: P) => (
+  <svg {...base(size)}><path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8.5 20h7M10 17h4" /></svg>
+)

@@ -113,6 +113,25 @@ Cómo funciona (`src/cloud/`):
 - Cerrar sesión limpia el teléfono (el progreso queda en la cuenta). Borrar cuenta borra la nube, no el teléfono.
 - `config.ts` en `null` apaga todo y Loppy vuelve a ser solo local.
 
+### Ranking ✅ (v0.6, 2026-10-21)
+
+Pestaña **Ranking** con dos tablas: **Semanal** (se reinicia los lunes a las 00:00, hora UTC-5) e **Histórico**
+(todo el XP). Podio 🏆🥈🥉 y lista desde el 4. Cualquiera lo ve; para aparecer hay que tener cuenta.
+
+```
+ranking/{uid}   name, country, hidden, xp, week, weekXp, day, dayXp, updatedAt   -- público, sin correo
+```
+
+- `src/cloud/ranking.ts` publica el lugar de cada persona (unos segundos después de ganar XP) y lee el top 50.
+  "Tu puesto #N" sale con una consulta de conteo (1 lectura).
+- **Anti-trampas** (`firestore.rules`): el XP del ranking sube como máximo **2000 por día** (`dayXp`), y al crearse
+  no puede pasar de 2000 × días de antigüedad de la cuenta. Si alguien gana más (o junta progreso de antes de tener
+  cuenta), el ranking lo alcanza en los días siguientes. Solo se borra junto con la cuenta.
+- País: se adivina por la zona horaria (`src/ranking/countries.ts`) y se cambia en Perfil → Ranking, donde
+  también se puede elegir no aparecer (`hidden`). Las banderas usan la fuente Twemoji solo donde el sistema no
+  las trae (Windows), incluida en la app.
+- Índices: `firestore.indexes.json` (publicar con `npx firebase-tools deploy --only firestore:rules,firestore:indexes`).
+
 **Próximos pasos (acordados el 2026-10-07):**
 1. **Panel de usuarios** propio: activos hoy, registros por día, reto donde más se atasca la gente (`attempts`).
 2. **Notificaciones de racha** con Firebase Cloud Messaging (FCM): "¡Tu racha está en peligro!".
@@ -187,6 +206,7 @@ pasa solo y que las respuestas de "predice la salida" son correctas.
 - [x] **v0.1** Python básico→recursión (6 unidades, 28 retos), editor, consola, XP, rachas, niveles, modo Libre, perfil.
 - [x] **v0.2** Python completo hasta nivel 6: 16 unidades, 88 retos (~3 500 XP), retos "arregla el bug", verificador automático.
 - [x] **v0.3** PWA instalable en iPhone/Android, funciona sin internet. Publicada en https://loppy-code.netlify.app
+- [x] **v0.6** Ranking semanal e histórico con país y anti-trampas.
 - [ ] v0.4 Reto diario.
 - [ ] Resaltar en el editor la línea del error; sonidos.
 - [ ] v0.4 Supabase: cuentas, sincronización, protector de racha.

@@ -40,6 +40,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 button:disabled { cursor: not-allowed; }
 :focus-visible { outline: 3px solid var(--violet); outline-offset: 2px; }
 code, pre { font-family: var(--mono); }
+.flag { font-family: 'Twemoji Country Flags', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif; line-height: 1; }
 
 /* ---------- Botones ---------- */
 .btn {
@@ -121,7 +122,7 @@ code, pre { font-family: var(--mono); }
   .nav { top: 0; bottom: auto; left: auto; right: 0; height: 57px; border: 0; background: transparent; padding: 0 16px; gap: 4px; }
   .nav__item { flex-direction: row; gap: 6px; font-size: 15px; padding: 0 14px; max-width: none; flex: none; }
   .nav__item svg { width: 22px; height: 22px; }
-  .topbar { padding-right: 420px; }
+  .topbar { padding-right: 540px; }
   .page { padding-bottom: 48px; }
 }
 

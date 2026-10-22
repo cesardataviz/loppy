@@ -3,7 +3,8 @@ import { Learn } from './screens/Learn'
 import { Session } from './screens/Session'
 import { Playground } from './screens/Playground'
 import { Profile } from './screens/Profile'
-import { Bolt, Code, Flame, Path, User } from './components/Icons'
+import { Ranking } from './screens/Ranking'
+import { Bolt, Code, Flame, Path, Trophy, User } from './components/Icons'
 import { useProgress } from './progress/store'
 import { getPythonRunner } from './engine/pythonRunner'
 import { APP_NAME } from './brand'
@@ -11,12 +12,13 @@ import { applyUpdate, onUpdateReady } from './pwa/register'
 import { AuthSheet } from './components/AuthSheet'
 import { trackScreen } from './cloud/firebase'
 
-type Tab = 'learn' | 'playground' | 'profile'
+type Tab = 'learn' | 'playground' | 'ranking' | 'profile'
 type Route = { name: Tab } | { name: 'session'; ids: string[]; title: string }
 
 const TABS: { id: Tab; label: string; icon: () => React.ReactElement }[] = [
   { id: 'learn', label: 'Aprender', icon: () => <Path /> },
   { id: 'playground', label: 'Libre', icon: () => <Code /> },
+  { id: 'ranking', label: 'Ranking', icon: () => <Trophy /> },
   { id: 'profile', label: 'Perfil', icon: () => <User /> },
 ]
 
@@ -64,6 +66,7 @@ export default function App() {
       <main>
         {route.name === 'learn' && <Learn onStart={(ids, title) => setRoute({ name: 'session', ids, title })} />}
         {route.name === 'playground' && <Playground />}
+        {route.name === 'ranking' && <Ranking />}
         {route.name === 'profile' && <Profile />}
       </main>
 

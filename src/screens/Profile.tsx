@@ -1,6 +1,7 @@
 import { Loppy, streakTier } from '../components/Loppy'
 import { BackupCard } from '../components/BackupCard'
 import { AccountCard } from '../components/AccountCard'
+import { RankingCard } from '../components/RankingCard'
 import { getCloud } from '../cloud/state'
 import { Bolt, Check, Flame, Star } from '../components/Icons'
 import { courses } from '../content'
@@ -64,6 +65,8 @@ export function Profile() {
           ))}
         </div>
       </section>
+
+      <RankingCard />
 
       <BackupCard />
 

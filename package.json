@@ -2,7 +2,7 @@
   "name": "loppy",
   "private": true,
   "license": "MIT",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -19,6 +19,7 @@
     "@fontsource/nunito": "^5.3.0",
     "@lezer/highlight": "^1.2.5",
     "@uiw/react-codemirror": "^4.25.12",
+    "country-flag-emoji-polyfill": "^0.1.10",
     "firebase": "^12.19.0",
     "pyodide": "^0.28.3",
     "react": "^19.3.0",

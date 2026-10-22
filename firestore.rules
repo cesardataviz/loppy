@@ -72,6 +72,58 @@ service cloud.firestore {
       }
     }
 
+    // --- Ranking público: nombre, país y XP (nunca el correo). Lo ve cualquiera. ---
+    // Días y semanas en hora UTC-5; la semana empieza el lunes (igual que src/cloud/ranking.ts).
+    function rankDay() {
+      return math.floor((request.time.toMillis() - 18000000) / 86400000);
+    }
+    function rankWeek() {
+      return math.floor((rankDay() + 3) / 7);
+    }
+
+    function validRank(d) {
+      return d.keys().hasOnly(['name', 'country', 'hidden', 'xp', 'week', 'weekXp', 'day', 'dayXp', 'updatedAt'])
+        && d.name is string && d.name.size() > 0 && d.name.size() <= 40
+        && d.country is string && d.country.matches('^([A-Z]{2})?$')
+        && d.hidden is bool
+        && isCount(d.xp, 100000)
+        && d.week == rankWeek() && d.day == rankDay()
+        && isCount(d.weekXp, 100000) && d.weekXp <= d.xp
+        && isCount(d.dayXp, 2000)
+        && d.updatedAt == request.time;
+    }
+
+    // Anti-trampas: el XP solo sube lo que se suma al contador del día (máximo 2000 por día).
+    // Bajar siempre se puede (reiniciar progreso).
+    function validRankChange(d, o) {
+      let prevDay = o.day == rankDay() ? o.dayXp : 0;
+      let prevWeek = o.week == rankWeek() ? o.weekXp : 0;
+      let gain = d.xp - o.xp;
+      return gain <= 0
+        ? d.dayXp == prevDay && d.weekXp <= prevWeek
+        : d.dayXp == prevDay + gain && d.weekXp == prevWeek + gain;
+    }
+
+    match /ranking/{uid} {
+      allow read: if true;
+
+      // Primera vez: como máximo 2000 XP por cada día que tiene la cuenta.
+      allow create: if isOwner(uid)
+        && validRank(request.resource.data)
+        && request.resource.data.dayXp == 0
+        && request.resource.data.weekXp <= 14000
+        && request.resource.data.xp <= 2000 * (math.floor((request.time.toMillis()
+             - get(/databases/$(database)/documents/users/$(uid)).data.createdAt.toMillis()) / 86400000) + 1);
+
+      allow update: if isOwner(uid)
+        && validRank(request.resource.data)
+        && validRankChange(request.resource.data, resource.data);
+
+      // Solo junto con borrar la cuenta (si no, alguien podría borrar y recrear para saltarse el tope).
+      allow delete: if isOwner(uid)
+        && !existsAfter(/databases/$(database)/documents/users/$(uid));
+    }
+
     // Todo lo demás está cerrado.
     match /{document=**} {
       allow read, write: if false;
